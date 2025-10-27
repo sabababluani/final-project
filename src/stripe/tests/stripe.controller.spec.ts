@@ -56,7 +56,7 @@ describe('StripeController', () => {
         user: {
           id: 1,
           email: 'test@example.com',
-          role: 'USER',
+          role: 'User',
           firstName: 'Test',
           lastName: 'User',
         } as User,

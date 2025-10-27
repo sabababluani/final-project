@@ -37,7 +37,7 @@ describe('VinylsModule (Integration)', () => {
       firstName: 'Test',
       lastName: 'Admin',
       email: 'admin@test.com',
-      role: 'ADMIN',
+      role: 'Admin',
       password: 'hashedpassword',
     });
     const savedUser = await userRepository.save(testUser);
@@ -45,7 +45,7 @@ describe('VinylsModule (Integration)', () => {
 
     const secret = process.env.JWT_SECRET || 'test_jwt_secret';
     accessToken = jwtService.sign(
-      { sub: testUserId, email: 'admin@test.com', role: 'ADMIN' },
+      { sub: testUserId, email: 'admin@test.com', role: 'Admin' },
       { secret }
     );
   });

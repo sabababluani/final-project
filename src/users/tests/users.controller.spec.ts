@@ -51,7 +51,7 @@ describe('UsersController', () => {
   describe('me', () => {
     it('should return current user', async () => {
       const mockReq = {
-        user: { id: 1, email: 'test@test.com', role: 'USER' },
+        user: { id: 1, email: 'test@test.com', role: 'User' },
       };
 
       const result = await controller.me(
@@ -67,7 +67,7 @@ describe('UsersController', () => {
   describe('update', () => {
     it('should update a user', async () => {
       const mockReq = {
-        user: { id: 1, email: 'test@test.com', role: 'USER' },
+        user: { id: 1, email: 'test@test.com', role: 'User' },
       };
       const updateDto = { firstName: 'Updated' };
       const result = await controller.update(
@@ -84,7 +84,7 @@ describe('UsersController', () => {
   describe('remove', () => {
     it('should remove a user', async () => {
       const mockReq = {
-        user: { id: 1, email: 'test@test.com', role: 'USER' },
+        user: { id: 1, email: 'test@test.com', role: 'User' },
       };
       const result = await controller.remove(
         mockReq as unknown as AuthenticatedRequest

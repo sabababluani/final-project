@@ -117,7 +117,7 @@ export function ApiGoogleRedirect() {
               email: { type: 'string', example: 'john.doe@example.com' },
               firstName: { type: 'string', example: 'John' },
               lastName: { type: 'string', example: 'Doe' },
-              role: { type: 'string', example: 'USER' },
+              role: { type: 'string', example: 'User' },
               avatar: {
                 type: 'string',
                 example: 'https://lh3.googleusercontent.com/...',

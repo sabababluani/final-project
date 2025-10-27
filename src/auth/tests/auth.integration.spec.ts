@@ -60,14 +60,14 @@ describe('AuthModule (Integration)', () => {
         firstName: 'Existing',
         lastName: 'User',
         email: 'existing@test.com',
-        role: 'USER',
+        role: 'User',
         password: '$2b$10$hashed_password_here',
       })
     );
 
     const secret = process.env.JWT_SECRET || 'test_jwt_secret';
     accessToken = jwtService.sign(
-      { sub: testUser.id, email: 'existing@test.com', role: 'USER' },
+      { sub: testUser.id, email: 'existing@test.com', role: 'User' },
       { secret }
     );
 
@@ -76,7 +76,7 @@ describe('AuthModule (Integration)', () => {
         firstName: 'Login',
         lastName: 'Test',
         email: 'login@test.com',
-        role: 'USER',
+        role: 'User',
         password: await bcrypt.hash('ValidPassword123!', 10),
       })
     );

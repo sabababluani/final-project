@@ -50,7 +50,7 @@ describe('DiscogsModule (Integration)', () => {
         firstName: 'Admin',
         lastName: 'User',
         email: 'admin@test.com',
-        role: 'ADMIN',
+        role: 'Admin',
         password: '$2b$10$hashed_password',
       })
     );
@@ -60,18 +60,18 @@ describe('DiscogsModule (Integration)', () => {
         firstName: 'Regular',
         lastName: 'User',
         email: 'user@test.com',
-        role: 'USER',
+        role: 'User',
         password: '$2b$10$hashed_password',
       })
     );
 
     adminToken = jwtService.sign(
-      { sub: adminUser.id, email: adminUser.email, role: 'ADMIN' },
+      { sub: adminUser.id, email: adminUser.email, role: 'Admin' },
       { secret }
     );
 
     userToken = jwtService.sign(
-      { sub: regularUser.id, email: regularUser.email, role: 'USER' },
+      { sub: regularUser.id, email: regularUser.email, role: 'User' },
       { secret }
     );
   });

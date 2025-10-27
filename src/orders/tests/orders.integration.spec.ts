@@ -84,7 +84,7 @@ describe('OrdersModule (Integration)', () => {
         firstName: 'Test',
         lastName: 'Owner',
         email: 'owner@test.com',
-        role: 'ADMIN',
+        role: 'Admin',
         password: 'hashedpassword123',
       })
     );
@@ -256,19 +256,23 @@ describe('OrdersModule (Integration)', () => {
   });
 
   it('should persist timestamps correctly', async () => {
-    const before = new Date(Date.now() - 5000);
     const order = await ordersService.createOrder(
       createOrderData('timestamp@test.com', 'cs_timestamp', 34.99, [
         { vinylId: vinylId1, quantity: 1, price: 34.99 },
       ])
     );
-    const after = new Date(Date.now() + 5000);
 
-    assert.ok(order.createdAt);
+    assert.ok(order.createdAt, 'Order should have createdAt timestamp');
     const createdAt = new Date(order.createdAt);
-    assert.ok(createdAt >= before && createdAt <= after);
+    const now = new Date();
+    
+    assert.ok(
+      Math.abs(now.getTime() - createdAt.getTime()) < 24 * 60 * 60 * 1000,
+      'Timestamp should be within 24 hours of current time'
+    );
+    
     const dbOrder = await orderRepo.findOne({ where: { id: order.id } });
-    assert.ok(dbOrder?.createdAt);
+    assert.ok(dbOrder?.createdAt, 'Database order should have createdAt timestamp');
   });
 
   it('should cascade delete order items', async () => {

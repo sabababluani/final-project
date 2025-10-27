@@ -79,7 +79,7 @@ export class VinylsRepository {
     qb.leftJoinAndSelect(
       'vinyl.reviews',
       'review',
-      'review.id = (SELECT r.id FROM review r WHERE r.vinylId = vinyl.id ORDER BY r.createdAt ASC LIMIT 1)'
+      'review.id = (SELECT r.id FROM review r WHERE r."vinylId" = vinyl.id ORDER BY r."createdAt" ASC LIMIT 1)'
     );
 
     qb.leftJoinAndSelect('review.user', 'reviewUser');

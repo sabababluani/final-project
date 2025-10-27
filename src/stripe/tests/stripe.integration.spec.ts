@@ -78,12 +78,12 @@ describe('StripeModule (Integration)', () => {
         firstName: 'Test',
         lastName: 'User',
         email: 'testuser@test.com',
-        role: 'USER',
+        role: 'User',
         password: 'hashedpassword123',
       })
     );
     userToken = jwtService.sign(
-      { sub: testUser.id, email: testUser.email, role: 'USER' },
+      { sub: testUser.id, email: testUser.email, role: 'User' },
       { secret }
     );
 
@@ -92,12 +92,12 @@ describe('StripeModule (Integration)', () => {
         firstName: 'Admin',
         lastName: 'User',
         email: 'admin@test.com',
-        role: 'ADMIN',
+        role: 'Admin',
         password: 'hashedpassword456',
       })
     );
     adminToken = jwtService.sign(
-      { sub: adminUser.id, email: adminUser.email, role: 'ADMIN' },
+      { sub: adminUser.id, email: adminUser.email, role: 'Admin' },
       { secret }
     );
 

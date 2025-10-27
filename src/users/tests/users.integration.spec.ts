@@ -38,7 +38,7 @@ describe('UsersModule (Integration)', () => {
       firstName: 'Test',
       lastName: 'User',
       email: 'testuser@test.com',
-      role: 'USER',
+      role: 'User',
       password: 'hashedpassword123',
     });
     const savedUser = await userRepository.save(testUser);
@@ -46,7 +46,7 @@ describe('UsersModule (Integration)', () => {
 
     const secret = process.env.JWT_SECRET || 'test_jwt_secret';
     accessToken = jwtService.sign(
-      { sub: testUserId, email: 'testuser@test.com', role: 'USER' },
+      { sub: testUserId, email: 'testuser@test.com', role: 'User' },
       { secret }
     );
   });

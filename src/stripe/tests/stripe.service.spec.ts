@@ -96,7 +96,7 @@ describe('StripeService', () => {
       email: 'test@example.com',
       firstName: 'Test',
       lastName: 'User',
-      role: 'USER',
+      role: 'User',
     };
 
     it('should create checkout session with valid items', async () => {
