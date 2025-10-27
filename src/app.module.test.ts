@@ -47,6 +47,9 @@ import { DiscogsModule } from './discogs/discogs.module';
         entities: [User, TokenBlacklist, Vinyl, Review],
         autoLoadEntities: true,
         synchronize: true,
+        ssl: {
+          rejectUnauthorized: false,
+        },
       }),
     }),
     TokenBlacklistsModule,

@@ -49,6 +49,9 @@ import { DiscogsModule } from './discogs/discogs.module';
         synchronize: false,
         migrationsRun: true,
         migrations: ['dist/migrations/*{.ts,.js}'],
+        ssl: {
+          rejectUnauthorized: false, 
+        },
       }),
     }),
     TokenBlacklistsModule,
