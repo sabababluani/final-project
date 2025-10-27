@@ -265,14 +265,17 @@ describe('OrdersModule (Integration)', () => {
     assert.ok(order.createdAt, 'Order should have createdAt timestamp');
     const createdAt = new Date(order.createdAt);
     const now = new Date();
-    
+
     assert.ok(
       Math.abs(now.getTime() - createdAt.getTime()) < 24 * 60 * 60 * 1000,
       'Timestamp should be within 24 hours of current time'
     );
-    
+
     const dbOrder = await orderRepo.findOne({ where: { id: order.id } });
-    assert.ok(dbOrder?.createdAt, 'Database order should have createdAt timestamp');
+    assert.ok(
+      dbOrder?.createdAt,
+      'Database order should have createdAt timestamp'
+    );
   });
 
   it('should cascade delete order items', async () => {

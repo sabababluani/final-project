@@ -312,7 +312,7 @@ describe('SystemLogsModule (Integration)', () => {
     assert.ok(response.body.log.updatedAt, 'Should have updatedAt timestamp');
 
     const createdAt = new Date(response.body.log.createdAt);
-    
+
     assert.ok(
       Math.abs(now.getTime() - createdAt.getTime()) < 24 * 60 * 60 * 1000,
       'Timestamp should be within 24 hours of current time'

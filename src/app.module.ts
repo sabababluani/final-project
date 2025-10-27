@@ -50,7 +50,7 @@ import { DiscogsModule } from './discogs/discogs.module';
         migrationsRun: true,
         migrations: ['dist/migrations/*{.ts,.js}'],
         ssl: {
-          rejectUnauthorized: false, 
+          rejectUnauthorized: false,
         },
       }),
     }),
