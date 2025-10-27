@@ -10,13 +10,11 @@ import { AuthGuard } from '../../auth/guards/jwt-auth.guard';
 describe('UsersController', () => {
   let controller: UsersController;
   let mockMe: ReturnType<typeof mock.fn>;
-  let mockFindOne: ReturnType<typeof mock.fn>;
   let mockUpdate: ReturnType<typeof mock.fn>;
   let mockRemove: ReturnType<typeof mock.fn>;
 
   before(async () => {
     mockMe = mock.fn(async () => ({ id: 1, email: 'test@test.com' }));
-    mockFindOne = mock.fn(async () => ({ id: 1, email: 'test@test.com' }));
     mockUpdate = mock.fn(async () => ({
       id: 1,
       email: 'test@test.com',
@@ -33,7 +31,6 @@ describe('UsersController', () => {
           provide: UsersService,
           useValue: {
             me: mockMe,
-            findOne: mockFindOne,
             update: mockUpdate,
             remove: mockRemove,
           },
@@ -64,16 +61,6 @@ describe('UsersController', () => {
       assert.ok(result);
       assert.strictEqual(result.id, 1);
       assert.strictEqual(mockMe.mock.callCount(), 1);
-    });
-  });
-
-  describe('findOne', () => {
-    it('should find a user by id', async () => {
-      const result = await controller.findOne('1');
-
-      assert.ok(result);
-      assert.strictEqual(result.id, 1);
-      assert.strictEqual(mockFindOne.mock.callCount(), 1);
     });
   });
 

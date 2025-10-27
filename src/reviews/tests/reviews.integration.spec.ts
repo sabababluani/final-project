@@ -202,7 +202,7 @@ describe('ReviewsModule (Integration)', () => {
 
     const res = await req('delete', `/reviews/${review.id}`, adminToken);
     assert.strictEqual(res.status, 200);
-    assert.strictEqual(res.body.message, 'Successfully deleted review');
+    assert.strictEqual(res.body.message, 'Review deleted successfully');
 
     const deleted = await reviewRepo.findOneBy({ id: review.id });
     assert.strictEqual(deleted, null);

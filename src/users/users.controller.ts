@@ -3,7 +3,6 @@ import {
   Get,
   Body,
   Patch,
-  Param,
   Delete,
   UseGuards,
   Req,
@@ -14,12 +13,9 @@ import { AuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AuthenticatedRequest } from '../interfaces/authenticated-user.interface';
 import {
   ApiGetMe,
-  ApiGetUserById,
   ApiUpdateUser,
   ApiDeleteUser,
 } from './swagger/users.swagger';
-import { Roles } from '../auth/guards/jwt-roles.guard';
-import { Role } from '../auth/guards/enum/role.enum';
 
 @Controller('users')
 export class UsersController {
@@ -33,13 +29,6 @@ export class UsersController {
     return await this.usersService.me(user);
   }
 
-  @ApiGetUserById()
-  @UseGuards(AuthGuard)
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return await this.usersService.findOne(+id);
-  }
-
   @ApiUpdateUser()
   @UseGuards(AuthGuard)
   @Patch('me')
@@ -51,30 +40,11 @@ export class UsersController {
     return await this.usersService.update(user.id, updateUserDto);
   }
 
-  @ApiUpdateUser()
-  @Roles(Role.ADMIN)
-  @UseGuards(AuthGuard)
-  @Patch(':id')
-  async updateById(
-    @Param('id') id: string,
-    @Body() updateUserDto: UpdateUserDto
-  ) {
-    return await this.usersService.update(+id, updateUserDto);
-  }
-
   @ApiDeleteUser()
   @UseGuards(AuthGuard)
   @Delete('me')
   async remove(@Req() req: AuthenticatedRequest) {
     const user = req.user;
     return await this.usersService.remove(user.id);
-  }
-
-  @ApiDeleteUser()
-  @Roles(Role.ADMIN)
-  @UseGuards(AuthGuard)
-  @Delete(':id')
-  async removeById(@Param('id') id: string) {
-    return await this.usersService.remove(+id);
   }
 }

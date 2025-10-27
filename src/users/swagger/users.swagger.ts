@@ -2,7 +2,6 @@ import { applyDecorators } from '@nestjs/common';
 import {
   ApiOperation,
   ApiResponse,
-  ApiParam,
   ApiTags,
   ApiBearerAuth,
 } from '@nestjs/swagger';
@@ -28,31 +27,6 @@ export function ApiGetMe() {
       description: 'User profile retrieved successfully',
       type: User,
     }),
-    ApiUnauthorized(),
-    ApiInternalError()
-  );
-}
-
-export function ApiGetUserById() {
-  return applyDecorators(
-    ApiTags('Users'),
-    ApiBearerAuth('JWT-auth'),
-    ApiOperation({
-      summary: 'Get user by ID',
-      description: 'Retrieves a user profile by their unique identifier.',
-    }),
-    ApiParam({
-      name: 'id',
-      description: 'User ID',
-      example: 1,
-      type: 'number',
-    }),
-    ApiResponse({
-      status: 200,
-      description: 'User found',
-      type: User,
-    }),
-    ApiNotFound('User'),
     ApiUnauthorized(),
     ApiInternalError()
   );

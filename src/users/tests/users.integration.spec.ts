@@ -15,10 +15,7 @@ describe('UsersModule (Integration)', () => {
   let dataSource: DataSource;
   let jwtService: JwtService;
   let accessToken: string;
-  let adminAccessToken: string;
   let testUserId: number;
-  let adminUserId: number;
-  let anotherUserId: number;
 
   before(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -47,33 +44,9 @@ describe('UsersModule (Integration)', () => {
     const savedUser = await userRepository.save(testUser);
     testUserId = savedUser.id;
 
-    const adminUser = userRepository.create({
-      firstName: 'Admin',
-      lastName: 'User',
-      email: 'admin@test.com',
-      role: 'ADMIN',
-      password: 'hashedpassword789',
-    });
-    const savedAdminUser = await userRepository.save(adminUser);
-    adminUserId = savedAdminUser.id;
-
-    const anotherUser = userRepository.create({
-      firstName: 'Another',
-      lastName: 'User',
-      email: 'anotheruser@test.com',
-      role: 'USER',
-      password: 'hashedpassword456',
-    });
-    const savedAnotherUser = await userRepository.save(anotherUser);
-    anotherUserId = savedAnotherUser.id;
-
     const secret = process.env.JWT_SECRET || 'test_jwt_secret';
     accessToken = jwtService.sign(
       { sub: testUserId, email: 'testuser@test.com', role: 'USER' },
-      { secret }
-    );
-    adminAccessToken = jwtService.sign(
-      { sub: adminUserId, email: 'admin@test.com', role: 'ADMIN' },
       { secret }
     );
   });
@@ -119,47 +92,15 @@ describe('UsersModule (Integration)', () => {
     );
   });
 
-  it('should get user by ID (GET /users/:id)', async () => {
-    const response = await request(app.getHttpServer())
-      .get(`/users/${anotherUserId}`)
-      .set('Authorization', `Bearer ${accessToken}`);
-
-    assert.strictEqual(
-      response.status,
-      200,
-      `Expected 200 but got ${response.status}: ${JSON.stringify(response.body)}`
-    );
-
-    assert.ok(response.body, 'Response body should exist');
-    assert.strictEqual(response.body.id, anotherUserId, 'User ID should match');
-    assert.strictEqual(
-      response.body.email,
-      'anotheruser@test.com',
-      'Email should match'
-    );
-  });
-
-  it('should return 404 when getting non-existent user (GET /users/99999)', async () => {
-    const response = await request(app.getHttpServer())
-      .get('/users/99999')
-      .set('Authorization', `Bearer ${accessToken}`);
-
-    assert.strictEqual(
-      response.status,
-      404,
-      `Expected 404 but got ${response.status}`
-    );
-  });
-
-  it('should update user (PATCH /users/:id)', async () => {
+  it('should update own profile (PATCH /users/me)', async () => {
     const updateDto = {
       firstName: 'Updated',
       lastName: 'Name',
     };
 
     const response = await request(app.getHttpServer())
-      .patch(`/users/${testUserId}`)
-      .set('Authorization', `Bearer ${adminAccessToken}`)
+      .patch('/users/me')
+      .set('Authorization', `Bearer ${accessToken}`)
       .send(updateDto);
 
     assert.strictEqual(
@@ -195,27 +136,10 @@ describe('UsersModule (Integration)', () => {
     );
   });
 
-  it('should return 404 when updating non-existent user (PATCH /users/99999)', async () => {
-    const updateDto = {
-      firstName: 'NonExistent',
-    };
-
+  it('should delete own account (DELETE /users/me)', async () => {
     const response = await request(app.getHttpServer())
-      .patch('/users/99999')
-      .set('Authorization', `Bearer ${adminAccessToken}`)
-      .send(updateDto);
-
-    assert.strictEqual(
-      response.status,
-      404,
-      `Expected 404 but got ${response.status}`
-    );
-  });
-
-  it('should delete user (DELETE /users/:id)', async () => {
-    const response = await request(app.getHttpServer())
-      .delete(`/users/${anotherUserId}`)
-      .set('Authorization', `Bearer ${adminAccessToken}`);
+      .delete('/users/me')
+      .set('Authorization', `Bearer ${accessToken}`);
 
     assert.strictEqual(
       response.status,
@@ -227,24 +151,12 @@ describe('UsersModule (Integration)', () => {
 
     const userRepository = dataSource.getRepository(User);
     const deletedUser = await userRepository.findOne({
-      where: { id: anotherUserId },
+      where: { id: testUserId },
     });
     assert.strictEqual(
       deletedUser,
       null,
       'User should be deleted from database'
-    );
-  });
-
-  it('should return 404 when deleting non-existent user (DELETE /users/99999)', async () => {
-    const response = await request(app.getHttpServer())
-      .delete('/users/99999')
-      .set('Authorization', `Bearer ${adminAccessToken}`);
-
-    assert.strictEqual(
-      response.status,
-      404,
-      `Expected 404 but got ${response.status}`
     );
   });
 
