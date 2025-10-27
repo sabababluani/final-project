@@ -1,10 +1,11 @@
 import { describe, it, before, mock } from 'node:test';
 import * as assert from 'node:assert';
-import { Test, TestingModule } from '@nestjs/testing';
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { MailService } from '../mail.service';
 import { SystemLogsService } from '../../system-logs/system-logs.service';
-import Stripe from 'stripe';
+import type Stripe from 'stripe';
 
 describe('MailService', () => {
   let service: MailService;

@@ -1,6 +1,7 @@
 import { describe, it, before, mock } from 'node:test';
 import * as assert from 'node:assert';
-import { Test, TestingModule } from '@nestjs/testing';
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { TelegramService } from '../telegram.service';
 

@@ -9,7 +9,7 @@ import {
   Req,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { GoogleAuthGuard } from './guards/GoogleGuards';
+import { GoogleAuthGuard } from './guards/google/GoogleGuards';
 import { validate } from 'class-validator';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { loginUserDto } from './dto/login-user.dto';
@@ -24,7 +24,9 @@ import {
   ApiLogout,
 } from './swagger/auth.swagger';
 import { GoogleRedirectRequest } from './interfaces/google-redirect-request.interface';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}

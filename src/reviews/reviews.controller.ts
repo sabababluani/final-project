@@ -32,23 +32,22 @@ export class ReviewsController {
   @ApiCreateReview()
   @UseGuards(AuthGuard)
   @Post(':vinylId')
-  create(
+  async create(
     @Body() createReviewDto: CreateReviewDto,
     @Req() req: AuthenticatedRequest,
     @Param('vinylId') vinylId: string
   ) {
     const user = req.user;
-    return this.reviewsService.create(createReviewDto, user, +vinylId);
+    return await this.reviewsService.create(createReviewDto, user, +vinylId);
   }
 
   @ApiGetReviewsByVinyl()
-  @UseGuards(AuthGuard)
   @Get('/vinyl/:vinylId')
   async findAllByVinyl(
     @Param('vinylId') vinylId: string,
     @Query() paginationDto: PaginationDto
   ) {
-    return this.reviewsService.findAllByVinyl(+vinylId, paginationDto);
+    return await this.reviewsService.findAllByVinyl(+vinylId, paginationDto);
   }
 
   @ApiDeleteReview()

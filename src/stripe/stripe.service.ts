@@ -13,6 +13,7 @@ import { CheckoutSessionInterface } from './interfaces/stripe.interface';
 import { OrdersService } from '../orders/orders.service';
 import { SystemLogsService } from '../system-logs/system-logs.service';
 import { LogLevel } from '../system-logs/dto/create-system-log.dto';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class StripeService {
@@ -40,14 +41,14 @@ export class StripeService {
     )!;
   }
 
-  async createCheckoutSessionForVinyls(dto: CreateOrderDto) {
-    const { items, currency, customerEmail } = dto;
+  async createCheckoutSessionForVinyls(dto: CreateOrderDto, user: User) {
+    const { items, currency } = dto;
 
     if (!items?.length) {
       throw new BadRequestException('No items provided');
     }
 
-    const currencyCode = currency!.toLowerCase() || 'usd';
+    const currencyCode = currency.toLowerCase() || 'usd';
 
     const vinyls = await this.loadVinylsWithQuantities(items);
 
@@ -64,7 +65,7 @@ export class StripeService {
       items: lineItems,
       successUrl: 'https://example.com/success',
       cancelUrl: 'https://example.com/cancel',
-      customerEmail,
+      customerEmail: user.email,
     });
 
     return { sessionId: session.url };
@@ -100,15 +101,11 @@ export class StripeService {
   private async processWebhookEvent(event: Stripe.Event) {
     switch (event.type) {
       case 'checkout.session.completed':
-        await this.handleCheckoutSessionCompleted(
-          event.data.object as Stripe.Checkout.Session
-        );
+        await this.handleCheckoutSessionCompleted(event.data.object);
         break;
 
       case 'payment_intent.succeeded':
-        await this.handlePaymentIntentSucceeded(
-          event.data.object as Stripe.PaymentIntent
-        );
+        await this.handlePaymentIntentSucceeded(event.data.object);
         break;
 
       default:

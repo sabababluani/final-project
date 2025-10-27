@@ -15,6 +15,7 @@ import {
   ApiCreateCheckoutSession,
   ApiStripeWebhook,
 } from './swagger/stripe.swagger';
+import { AuthenticatedRequest } from '../interfaces/authenticated-user.interface';
 
 @Controller('stripe')
 export class StripeController {
@@ -23,8 +24,12 @@ export class StripeController {
   @ApiCreateCheckoutSession()
   @UseGuards(AuthGuard)
   @Post('create-checkout-session')
-  async createCheckoutSession(@Body() dto: CreateOrderDto) {
-    return this.stripeService.createCheckoutSessionForVinyls(dto);
+  async createCheckoutSession(
+    @Body() dto: CreateOrderDto,
+    @Req() req: AuthenticatedRequest
+  ) {
+    const user = req.user;
+    return await this.stripeService.createCheckoutSessionForVinyls(dto, user);
   }
 
   @ApiStripeWebhook()

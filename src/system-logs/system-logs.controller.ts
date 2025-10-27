@@ -9,22 +9,24 @@ import {
   ApiGetSystemLogs,
 } from './swagger/system-logs.swagger';
 import { PaginationDto } from '../common/pagination.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('System')
 @Controller('system-logs')
 export class SystemLogsController {
   constructor(private readonly systemLogsService: SystemLogsService) {}
 
   @ApiCreateSystemLog()
   @Post()
-  create(@Body() createSystemLogDto: CreateSystemLogDto) {
-    return this.systemLogsService.createLog(createSystemLogDto);
+  async create(@Body() createSystemLogDto: CreateSystemLogDto) {
+    return await this.systemLogsService.createLog(createSystemLogDto);
   }
 
   @ApiGetSystemLogs()
   @UseGuards(AuthGuard)
   @Roles(Role.ADMIN)
   @Get()
-  getSystemLogs(@Query() query: PaginationDto) {
-    return this.systemLogsService.getSystemLogs(query);
+  async getSystemLogs(@Query() query: PaginationDto) {
+    return await this.systemLogsService.getSystemLogs(query);
   }
 }

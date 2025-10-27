@@ -19,6 +19,6 @@ export class DiscogsController {
     @Req() req: AuthenticatedRequest
   ) {
     const user = req.user;
-    return this.discogsService.fetchAndStoreVinyls(query || 'rock', user);
+    return await this.discogsService.fetchAndStoreVinyls(query || 'rock', user);
   }
 }

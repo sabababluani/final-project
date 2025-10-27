@@ -127,11 +127,21 @@
 ┌─────────────────────────────────────────┐
 │         Service Layer                   │
 │  • Business logic execution             │
-│  • Database operations                  │
-│  • Return results                       │
+│  • Orchestrates data flow               │
+│  • Calls repository methods             │
 └─────────────────┬───────────────────────┘
                   │
-                  │ 5. Format response
+                  │ 5. Query/persist data
+                  │
+                  ▼
+┌─────────────────────────────────────────┐
+│         Repository Layer                │
+│  • Database operations                  │
+│  • Query building                       │
+│  • Data access logic                    │
+└─────────────────┬───────────────────────┘
+                  │
+                  │ 6. Format response
                   │
                   ▼
 ┌─────────────────────────────────────────┐

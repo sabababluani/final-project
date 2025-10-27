@@ -1,6 +1,7 @@
 import { describe, it, before, beforeEach, mock } from 'node:test';
 import * as assert from 'node:assert';
-import { Test, TestingModule } from '@nestjs/testing';
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { StripeService } from '../stripe.service';
 import { ConfigService } from '@nestjs/config';
 import { VinylsService } from '../../vinyls/vinyls.service';
@@ -8,6 +9,7 @@ import { MailService } from '../../mail/mail.service';
 import { OrdersService } from '../../orders/orders.service';
 import { SystemLogsService } from '../../system-logs/system-logs.service';
 import { BadRequestException } from '@nestjs/common';
+import type { User } from '../../users/entities/user.entity';
 
 describe('StripeService', () => {
   let service: StripeService;
@@ -89,6 +91,14 @@ describe('StripeService', () => {
       image: 'https://example.com/img.jpg',
     };
 
+    const mockUser: Partial<User> = {
+      id: 1,
+      email: 'test@example.com',
+      firstName: 'Test',
+      lastName: 'User',
+      role: 'USER',
+    };
+
     it('should create checkout session with valid items', async () => {
       mockFindOneVinyl.mock.mockImplementation(async () => mockVinyl);
       mockStripeCreate.mock.mockImplementation(async () => ({
@@ -96,11 +106,13 @@ describe('StripeService', () => {
         url: 'https://checkout.stripe.com/session123',
       }));
 
-      const result = await service.createCheckoutSessionForVinyls({
-        items: [{ vinylId: 1, quantity: 2 }],
-        customerEmail: 'test@example.com',
-        currency: 'usd',
-      });
+      const result = await service.createCheckoutSessionForVinyls(
+        {
+          items: [{ vinylId: 1, quantity: 2 }],
+          currency: 'usd',
+        },
+        mockUser as User
+      );
 
       assert.ok(result);
       assert.strictEqual(
@@ -114,11 +126,13 @@ describe('StripeService', () => {
     it('should throw error when no items provided', async () => {
       await assert.rejects(
         async () =>
-          service.createCheckoutSessionForVinyls({
-            items: [],
-            customerEmail: 'test@example.com',
-            currency: 'usd',
-          }),
+          service.createCheckoutSessionForVinyls(
+            {
+              items: [],
+              currency: 'usd',
+            },
+            mockUser as User
+          ),
         BadRequestException
       );
     });
@@ -130,11 +144,13 @@ describe('StripeService', () => {
         url: 'https://checkout.stripe.com/session123',
       }));
 
-      const result = await service.createCheckoutSessionForVinyls({
-        items: [{ vinylId: 1, quantity: 1 }],
-        customerEmail: 'test@example.com',
-        currency: 'eur',
-      });
+      const result = await service.createCheckoutSessionForVinyls(
+        {
+          items: [{ vinylId: 1, quantity: 1 }],
+          currency: 'eur',
+        },
+        mockUser as User
+      );
       assert.ok(result.sessionId);
       assert.strictEqual(mockFindOneVinyl.mock.callCount(), 1);
     });

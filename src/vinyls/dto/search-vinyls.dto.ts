@@ -6,6 +6,7 @@ export enum VinylSortBy {
   PRICE = 'price',
   NAME = 'name',
   AUTHOR_NAME = 'authorName',
+  CREATED_AT = 'createdAt',
 }
 
 export enum SortOrder {

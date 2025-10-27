@@ -1,5 +1,12 @@
-import { IsEmail, IsString, Matches, MinLength } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsDateString,
+  IsEmail,
+  IsOptional,
+  IsString,
+  Matches,
+  MinLength,
+} from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Trim } from 'class-sanitizer';
 
 export class CreateUserDto {
@@ -29,6 +36,16 @@ export class CreateUserDto {
   @Trim()
   @IsString()
   lastName: string;
+
+  @ApiPropertyOptional({
+    description: 'User birthdate',
+    example: '1990-01-15',
+    type: 'string',
+    format: 'date',
+  })
+  @IsOptional()
+  @IsDateString()
+  birthdate?: string;
 
   @ApiProperty({
     description: 'User password (minimum 6 characters)',

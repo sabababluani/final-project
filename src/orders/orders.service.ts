@@ -37,10 +37,10 @@ export class OrdersService {
   }
 
   async getAllOrders() {
-    return this.ordersRepository.findAll();
+    return await this.ordersRepository.findAll();
   }
 
   async getOrderBySessionId(sessionId: string) {
-    return this.ordersRepository.findBySessionId(sessionId);
+    return await this.ordersRepository.findBySessionId(sessionId);
   }
 }

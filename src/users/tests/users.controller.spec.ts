@@ -1,9 +1,10 @@
 import { describe, it, before, mock } from 'node:test';
 import * as assert from 'node:assert';
-import { Test, TestingModule } from '@nestjs/testing';
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { UsersController } from '../users.controller';
 import { UsersService } from '../users.service';
-import { AuthenticatedRequest } from '../../interfaces/authenticated-user.interface';
+import type { AuthenticatedRequest } from '../../interfaces/authenticated-user.interface';
 import { AuthGuard } from '../../auth/guards/jwt-auth.guard';
 
 describe('UsersController', () => {

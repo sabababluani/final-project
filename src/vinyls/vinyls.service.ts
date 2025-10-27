@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { User } from '../users/entities/user.entity';
-import { PaginationDto } from '../common/pagination.dto';
 import { CreateVinylDto } from './dto/create-vinyl.dto';
 import { UpdateVinylDto } from './dto/update-vinyl.dto';
 import {
@@ -90,7 +89,7 @@ export class VinylsService {
       });
 
       await queryRunner.commitTransaction();
-      return { message: 'Successfully deleted vinyl' };
+      return { message: 'Vinyl deleted successfully' };
     } catch (error) {
       await queryRunner.rollbackTransaction();
       throw error;
@@ -114,21 +113,6 @@ export class VinylsService {
     const vinyl = await this.vinylsRepository.findById(id);
     if (!vinyl) throw new NotFoundException(`Vinyl with ID ${id} not found`);
     return vinyl;
-  }
-
-  async findAll(pagination: PaginationDto) {
-    const [vinyls, total] = await this.vinylsRepository.findAll(pagination);
-    const { page = 1, limit = 10 } = pagination;
-
-    return {
-      data: vinyls,
-      meta: {
-        total,
-        page,
-        limit,
-        totalPages: Math.ceil(total / limit),
-      },
-    };
   }
 
   async search(dto: SearchVinylsDto) {

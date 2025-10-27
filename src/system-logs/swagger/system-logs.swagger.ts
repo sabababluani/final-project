@@ -2,7 +2,6 @@ import { applyDecorators } from '@nestjs/common';
 import {
   ApiOperation,
   ApiResponse,
-  ApiTags,
   ApiBearerAuth,
   ApiQuery,
 } from '@nestjs/swagger';
@@ -15,7 +14,6 @@ import {
 
 export function ApiCreateSystemLog() {
   return applyDecorators(
-    ApiTags('System'),
     ApiOperation({
       summary: 'Create system log',
       description:
@@ -41,7 +39,6 @@ export function ApiCreateSystemLog() {
 
 export function ApiGetSystemLogs() {
   return applyDecorators(
-    ApiTags('System'),
     ApiBearerAuth('JWT-auth'),
     ApiOperation({
       summary: 'Get system logs (supports pagination)',

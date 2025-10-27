@@ -8,7 +8,6 @@ import {
 } from '@nestjs/swagger';
 import {
   ApiUnauthorized,
-  ApiForbidden,
   ApiNotFound,
   ApiBadRequest,
   ApiInternalError,

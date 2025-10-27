@@ -26,10 +26,13 @@ import { DiscogsModule } from './discogs/discogs.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    JwtModule.register({
+    JwtModule.registerAsync({
       global: true,
-      secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '1h' },
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        secret: config.get<string>('JWT_SECRET'),
+        signOptions: { expiresIn: config.get<number>('JWT_EXPIRATION_TIME') },
+      }),
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],

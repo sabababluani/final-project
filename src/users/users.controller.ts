@@ -28,50 +28,53 @@ export class UsersController {
   @ApiGetMe()
   @UseGuards(AuthGuard)
   @Get('me')
-  me(@Req() req: AuthenticatedRequest) {
+  async me(@Req() req: AuthenticatedRequest) {
     const user = req.user;
-    return this.usersService.me(user);
+    return await this.usersService.me(user);
   }
 
   @ApiGetUserById()
   @UseGuards(AuthGuard)
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return await this.usersService.findOne(+id);
   }
 
   @ApiUpdateUser()
   @UseGuards(AuthGuard)
   @Patch('me')
-  update(
+  async update(
     @Req() req: AuthenticatedRequest,
     @Body() updateUserDto: UpdateUserDto
   ) {
     const user = req.user;
-    return this.usersService.update(user.id, updateUserDto);
+    return await this.usersService.update(user.id, updateUserDto);
   }
 
   @ApiUpdateUser()
   @Roles(Role.ADMIN)
   @UseGuards(AuthGuard)
   @Patch(':id')
-  updateById(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  async updateById(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto
+  ) {
+    return await this.usersService.update(+id, updateUserDto);
   }
 
   @ApiDeleteUser()
   @UseGuards(AuthGuard)
   @Delete('me')
-  remove(@Req() req: AuthenticatedRequest) {
+  async remove(@Req() req: AuthenticatedRequest) {
     const user = req.user;
-    return this.usersService.remove(user.id);
+    return await this.usersService.remove(user.id);
   }
 
   @ApiDeleteUser()
   @Roles(Role.ADMIN)
   @UseGuards(AuthGuard)
   @Delete(':id')
-  removeById(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+  async removeById(@Param('id') id: string) {
+    return await this.usersService.remove(+id);
   }
 }

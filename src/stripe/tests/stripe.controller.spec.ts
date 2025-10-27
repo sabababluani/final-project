@@ -1,12 +1,15 @@
 import { describe, it, before, mock } from 'node:test';
 import * as assert from 'node:assert';
-import { Test, TestingModule } from '@nestjs/testing';
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { StripeController } from '../stripe.controller';
 import { StripeService } from '../stripe.service';
 import { BadRequestException } from '@nestjs/common';
-import { CreateOrderDto } from '../dto/create-order.dto';
+import type { CreateOrderDto } from '../dto/create-order.dto';
 import { AuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { Request } from 'express';
+import type { Request } from 'express';
+import type { AuthenticatedRequest } from '../../interfaces/authenticated-user.interface';
+import type { User } from '../../users/entities/user.entity';
 
 describe('StripeController', () => {
   let controller: StripeController;
@@ -46,14 +49,26 @@ describe('StripeController', () => {
     it('should create checkout session', async () => {
       const dto: CreateOrderDto = {
         items: [{ vinylId: 1, quantity: 2 }],
-        customerEmail: 'test@example.com',
         currency: 'usd',
+      };
+
+      const mockReq: Partial<AuthenticatedRequest> = {
+        user: {
+          id: 1,
+          email: 'test@example.com',
+          role: 'USER',
+          firstName: 'Test',
+          lastName: 'User',
+        } as User,
       };
 
       const result = { sessionId: 'https://checkout.stripe.com/session123' };
       mockCreateCheckout.mock.mockImplementation(() => Promise.resolve(result));
 
-      const response = await controller.createCheckoutSession(dto);
+      const response = await controller.createCheckoutSession(
+        dto,
+        mockReq as AuthenticatedRequest
+      );
 
       assert.deepStrictEqual(response, result);
       assert.strictEqual(mockCreateCheckout.mock.callCount(), 1);

@@ -1,15 +1,16 @@
 import { describe, it, before, mock } from 'node:test';
 import * as assert from 'node:assert';
-import { Test, TestingModule } from '@nestjs/testing';
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
 import { AuthController } from '../auth.controller';
 import { AuthService } from '../auth.service';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { CreateUserDto } from '../../users/dto/create-user.dto';
 import { loginUserDto } from '../dto/login-user.dto';
 import { AuthGuard } from '../guards/jwt-auth.guard';
-import { GoogleAuthGuard } from '../guards/GoogleGuards';
+import { GoogleAuthGuard } from '../guards/google/GoogleGuards';
 import { plainToInstance } from 'class-transformer';
-import { AuthenticatedRequest } from '../../interfaces/authenticated-user.interface';
+import type { AuthenticatedRequest } from '../../interfaces/authenticated-user.interface';
 
 describe('AuthController', () => {
   let controller: AuthController;

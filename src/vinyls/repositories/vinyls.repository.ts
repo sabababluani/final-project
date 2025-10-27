@@ -68,13 +68,21 @@ export class VinylsRepository {
   async search(dto: SearchVinylsDto): Promise<[Vinyl[], number]> {
     const {
       query,
-      sortBy = VinylSortBy.NAME,
+      sortBy = VinylSortBy.CREATED_AT,
       order = SortOrder.ASC,
       page = 1,
       limit = 10,
     } = dto;
 
     const qb = this.vinylsRepository.createQueryBuilder('vinyl');
+
+    qb.leftJoinAndSelect(
+      'vinyl.reviews',
+      'review',
+      'review.id = (SELECT r.id FROM review r WHERE r.vinylId = vinyl.id ORDER BY r.createdAt ASC LIMIT 1)'
+    );
+
+    qb.leftJoinAndSelect('review.user', 'reviewUser');
 
     if (query && query.trim().length > 0) {
       const searchQuery = `%${query.trim().toLowerCase()}%`;
@@ -88,6 +96,7 @@ export class VinylsRepository {
       [VinylSortBy.PRICE]: 'vinyl.price',
       [VinylSortBy.NAME]: 'vinyl.name',
       [VinylSortBy.AUTHOR_NAME]: 'vinyl.authorName',
+      [VinylSortBy.CREATED_AT]: 'vinyl.createdAt',
     };
 
     qb.orderBy(sortColumnMap[sortBy], order)

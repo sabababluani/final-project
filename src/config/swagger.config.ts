@@ -1,4 +1,4 @@
-import { INestApplication } from '@nestjs/common';
+import type { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 export function setupSwagger(app: INestApplication): void {
@@ -78,6 +78,7 @@ For issues or questions, please contact the development team.
     .addTag('Vinyls', 'Vinyl records catalog and management')
     .addTag('Reviews', 'Product reviews and ratings')
     .addTag('Stripe', 'Payment processing and checkout')
+    .addTag('Discogs', 'Discogs integration for vinyl migration')
     .addTag('System', 'System information and health checks')
     .build();
 
@@ -89,10 +90,10 @@ For issues or questions, please contact the development team.
 
   SwaggerModule.setup('api/docs', app, document, {
     swaggerOptions: {
-      persistAuthorization: true, // Keep auth token after page refresh
-      docExpansion: 'none', // Collapse all sections by default
-      filter: true, // Enable search/filter
-      showRequestDuration: true, // Show request duration
+      persistAuthorization: true,
+      docExpansion: 'none',
+      filter: true,
+      showRequestDuration: true,
       syntaxHighlight: {
         activate: true,
         theme: 'monokai',

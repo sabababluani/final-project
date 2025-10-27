@@ -1,5 +1,4 @@
 import {
-  IsEmail,
   IsNotEmpty,
   IsString,
   IsArray,
@@ -27,15 +26,6 @@ export class CreateOrderDto {
   @ValidateNested({ each: true })
   @Type(() => CreateOrderItemDto)
   items: CreateOrderItemDto[];
-
-  @ApiProperty({
-    description: 'Customer email address',
-    example: 'customer@example.com',
-    format: 'email',
-  })
-  @IsNotEmpty()
-  @IsEmail()
-  customerEmail: string;
 
   @ApiProperty({
     description: 'Currency code for the transaction',

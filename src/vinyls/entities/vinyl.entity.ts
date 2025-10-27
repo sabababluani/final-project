@@ -62,7 +62,8 @@ export class Vinyl extends BaseEntity {
   owner: User;
 
   @ApiPropertyOptional({
-    description: 'Reviews for this vinyl',
+    description:
+      'Reviews for this vinyl (only the first review is included when fetching vinyl lists)',
     type: () => [Review],
   })
   @OneToMany(() => Review, (review) => review.vinyl, { cascade: true })

@@ -10,12 +10,12 @@ export default tseslint.config(
   },
   eslintPluginPrettierRecommended,
   {
-    files: ['**/*.ts'], // ✅ Apply to all .ts files
+    files: ['**/*.ts'],
     plugins: {
-      '@typescript-eslint': tseslint.plugin, // ✅ Register the plugin
+      '@typescript-eslint': tseslint.plugin,
     },
     languageOptions: {
-      parser: tseslint.parser, // ✅ Explicitly set parser
+      parser: tseslint.parser,
       globals: {
         ...globals.node,
         ...globals.jest,
@@ -34,7 +34,14 @@ export default tseslint.config(
         { args: 'none', varsIgnorePattern: '^_' },
       ],
       '@typescript-eslint/no-unused-expressions': 'error',
+      '@typescript-eslint/no-unnecessary-type-assertion': 'error',
       'no-console': ['warn', { allow: ['warn', 'error', 'time', 'timeEnd'] }],
+      '@typescript-eslint/consistent-type-imports': [
+        'error',
+        { prefer: 'type-imports' },
+      ],
+      'prefer-const': 'error',
+      'no-var': 'error',
     },
   }
 );

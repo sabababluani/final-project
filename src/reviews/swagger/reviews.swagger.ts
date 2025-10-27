@@ -35,7 +35,15 @@ export function ApiCreateReview() {
     ApiResponse({
       status: 201,
       description: 'Review created successfully',
-      type: Review,
+      schema: {
+        type: 'object',
+        properties: {
+          message: {
+            type: 'string',
+            example: "Successfully created vinyl's review",
+          },
+        },
+      },
     }),
     ApiBadRequest(),
     ApiUnauthorized(),

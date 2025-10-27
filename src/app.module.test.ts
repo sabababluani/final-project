@@ -31,7 +31,7 @@ import { DiscogsModule } from './discogs/discogs.module';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         secret: config.get<string>('JWT_SECRET'),
-        signOptions: { expiresIn: '1h' },
+        signOptions: { expiresIn: config.get<number>('JWT_EXPIRATION_TIME') },
       }),
     }),
     TypeOrmModule.forRootAsync({

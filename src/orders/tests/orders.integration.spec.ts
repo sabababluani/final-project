@@ -1,8 +1,10 @@
 import { describe, it, before, after } from 'node:test';
 import * as assert from 'node:assert';
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
-import { DataSource, Repository } from 'typeorm';
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
+import type { INestApplication } from '@nestjs/common';
+import type { Repository } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { AppModuleTest } from '../../app.module.test';
 import { OrdersService } from '../orders.service';
 import { Order } from '../entities/order.entity';

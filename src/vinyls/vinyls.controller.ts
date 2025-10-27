@@ -12,7 +12,6 @@ import {
 } from '@nestjs/common';
 import { VinylsService } from './vinyls.service';
 import { CreateVinylDto } from './dto/create-vinyl.dto';
-import { PaginationDto } from '../common/pagination.dto';
 import { AuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AuthenticatedRequest } from '../interfaces/authenticated-user.interface';
 import { UpdateVinylDto } from './dto/update-vinyl.dto';
@@ -22,14 +21,15 @@ import { SearchVinylsDto } from './dto/search-vinyls.dto';
 import {
   ApiCreateVinyl,
   ApiGetAllVinyls,
-  ApiSearchVinyls,
   ApiUpdateVinyl,
   ApiDeleteVinyl,
 } from './swagger/vinyls.swagger';
 import { ApiExtraModels } from '@nestjs/swagger';
 import { Vinyl } from './entities/vinyl.entity';
+import { Review } from '../reviews/entities/review.entity';
+import { User } from '../users/entities/user.entity';
 
-@ApiExtraModels(Vinyl)
+@ApiExtraModels(Vinyl, Review, User)
 @Controller('vinyls')
 export class VinylsController {
   constructor(private readonly vinylsService: VinylsService) {}
@@ -38,21 +38,14 @@ export class VinylsController {
   @UseGuards(AuthGuard)
   @Roles(Role.ADMIN)
   @Post()
-  create(@Body() dto: CreateVinylDto, @Req() req: AuthenticatedRequest) {
+  async create(@Body() dto: CreateVinylDto, @Req() req: AuthenticatedRequest) {
     const user = req.user;
-    return this.vinylsService.create(dto, user);
+    return await this.vinylsService.create(dto, user);
   }
 
   @ApiGetAllVinyls()
   @Get()
-  async findAll(@Query() query: PaginationDto) {
-    return await this.vinylsService.findAll(query);
-  }
-
-  @ApiSearchVinyls()
-  @UseGuards(AuthGuard)
-  @Get('search')
-  async search(@Query() query: SearchVinylsDto) {
+  async findAll(@Query() query: SearchVinylsDto) {
     return await this.vinylsService.search(query);
   }
 

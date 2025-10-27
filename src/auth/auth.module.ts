@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { GoogleStrategy } from './guards/GoogleStrategy';
+import { GoogleStrategy } from './guards/google/GoogleStrategy';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SessionSerializer } from './guards/Serialize';
 import { User } from '../users/entities/user.entity';

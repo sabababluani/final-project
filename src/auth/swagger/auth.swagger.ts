@@ -3,7 +3,6 @@ import {
   ApiOperation,
   ApiResponse,
   ApiBody,
-  ApiTags,
   ApiBearerAuth,
 } from '@nestjs/swagger';
 import {
@@ -16,7 +15,6 @@ import { loginUserDto } from '../dto/login-user.dto';
 
 export function ApiRegister() {
   return applyDecorators(
-    ApiTags('Authentication'),
     ApiOperation({
       summary: 'Register a new user',
       description:
@@ -29,17 +27,7 @@ export function ApiRegister() {
       schema: {
         type: 'object',
         properties: {
-          message: { type: 'string', example: 'User registered successfully' },
-          user: {
-            type: 'object',
-            properties: {
-              id: { type: 'number', example: 1 },
-              email: { type: 'string', example: 'john.doe@example.com' },
-              firstName: { type: 'string', example: 'John' },
-              lastName: { type: 'string', example: 'Doe' },
-              role: { type: 'string', example: 'USER' },
-            },
-          },
+          message: { type: 'string', example: 'User Successfully Registered' },
         },
       },
     }),
@@ -50,7 +38,6 @@ export function ApiRegister() {
 
 export function ApiLogin() {
   return applyDecorators(
-    ApiTags('Authentication'),
     ApiOperation({
       summary: 'Login user',
       description:
@@ -63,19 +50,9 @@ export function ApiLogin() {
       schema: {
         type: 'object',
         properties: {
-          access_token: {
+          accessToken: {
             type: 'string',
             example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
-          },
-          user: {
-            type: 'object',
-            properties: {
-              id: { type: 'number', example: 1 },
-              email: { type: 'string', example: 'john.doe@example.com' },
-              firstName: { type: 'string', example: 'John' },
-              lastName: { type: 'string', example: 'Doe' },
-              role: { type: 'string', example: 'USER' },
-            },
           },
         },
       },
@@ -98,7 +75,6 @@ export function ApiLogin() {
 
 export function ApiGoogleLogin() {
   return applyDecorators(
-    ApiTags('Authentication'),
     ApiOperation({
       summary: 'Login with Google',
       description:
@@ -119,7 +95,6 @@ export function ApiGoogleLogin() {
 
 export function ApiGoogleRedirect() {
   return applyDecorators(
-    ApiTags('Authentication'),
     ApiOperation({
       summary: 'Google OAuth callback',
       description:
@@ -157,7 +132,6 @@ export function ApiGoogleRedirect() {
 
 export function ApiLogout() {
   return applyDecorators(
-    ApiTags('Authentication'),
     ApiBearerAuth('JWT-auth'),
     ApiOperation({
       summary: 'Logout user',

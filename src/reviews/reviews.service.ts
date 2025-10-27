@@ -103,7 +103,7 @@ export class ReviewsService {
       });
 
       await queryRunner.commitTransaction();
-      return { message: 'Successfully deleted review' };
+      return { message: 'Review deleted successfully' };
     } catch (error) {
       await queryRunner.rollbackTransaction();
       throw error;

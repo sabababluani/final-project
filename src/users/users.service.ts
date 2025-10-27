@@ -19,7 +19,7 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto) {
-    const { firstName, email, lastName, password, confirmPassword } =
+    const { firstName, email, lastName, password, confirmPassword, birthdate } =
       createUserDto;
 
     const existingUser = await this.usersRepository.findByEmail(email);
@@ -44,6 +44,7 @@ export class UsersService {
           lastName,
           email,
           password: hashedPassword,
+          birthdate: birthdate ? new Date(birthdate) : undefined,
         },
         queryRunner
       );
@@ -53,7 +54,7 @@ export class UsersService {
       });
 
       await queryRunner.commitTransaction();
-      return 'User Successfully Registered';
+      return { message: 'User Successfully Registered' };
     } catch (error) {
       await queryRunner.rollbackTransaction();
       throw error;
@@ -71,7 +72,23 @@ export class UsersService {
       const user = await this.usersRepository.findById(id);
       if (!user) throw new NotFoundException(`User with ID ${id} not found`);
 
-      await this.usersRepository.update(id, updateUserDto, queryRunner);
+      const { confirmPassword, password, ...updateData } = updateUserDto;
+
+      if (password) {
+        if (password !== confirmPassword) {
+          throw new HttpException(
+            'Passwords do not match',
+            HttpStatus.BAD_REQUEST
+          );
+        }
+        updateData['password'] = await bcrypt.hash(password, 10);
+      }
+
+      await this.usersRepository.update(
+        id,
+        updateData as Partial<User>,
+        queryRunner
+      );
 
       await this.systemLogsService.createLog({
         message: `User ${id} updated`,

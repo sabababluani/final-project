@@ -1,7 +1,9 @@
 import { describe, it, before, after } from 'node:test';
 import * as assert from 'node:assert';
-import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import type { TestingModule } from '@nestjs/testing';
+import { Test } from '@nestjs/testing';
+import type { INestApplication } from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { DataSource } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
@@ -47,7 +49,6 @@ describe('StripeModule (Integration)', () => {
     currency = 'usd'
   ) => ({
     items,
-    customerEmail: email,
     currency,
   });
 
@@ -201,17 +202,9 @@ describe('StripeModule (Integration)', () => {
     const validationTests = [
       { dto: createCheckoutDto([]), expected: 400, msg: 'empty items' },
       {
-        dto: { customerEmail: 'customer@test.com', currency: 'usd' },
+        dto: { currency: 'usd' },
         expected: 400,
         msg: 'missing items',
-      },
-      {
-        dto: createCheckoutDto(
-          [{ vinylId: vinylId1, quantity: 1 }],
-          'invalid-email'
-        ),
-        expected: 400,
-        msg: 'invalid email',
       },
       {
         dto: createCheckoutDto(
@@ -223,9 +216,9 @@ describe('StripeModule (Integration)', () => {
         msg: 'invalid currency',
       },
       {
-        dto: { items: [{ vinylId: vinylId1, quantity: 1 }], currency: 'usd' },
+        dto: { items: [{ vinylId: vinylId1, quantity: 1 }] },
         expected: 400,
-        msg: 'missing email',
+        msg: 'missing currency',
       },
       {
         dto: createCheckoutDto([{ vinylId: 99999, quantity: 1 }]),
@@ -255,19 +248,10 @@ describe('StripeModule (Integration)', () => {
       {
         dto: {
           items: [{ vinylId: vinylId1 }],
-          customerEmail: 'c@test.com',
           currency: 'usd',
         },
         expected: 400,
         msg: 'missing quantity',
-      },
-      {
-        dto: {
-          items: [{ vinylId: vinylId1, quantity: 1 }],
-          customerEmail: 'c@test.com',
-        },
-        expected: 400,
-        msg: 'missing currency',
       },
     ];
 

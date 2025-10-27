@@ -61,6 +61,15 @@ export class User extends BaseEntity {
   avatar: string;
 
   @ApiPropertyOptional({
+    description: 'User birthdate',
+    example: '1990-01-15',
+    type: 'string',
+    format: 'date',
+  })
+  @Column({ type: 'date', nullable: true })
+  birthdate?: Date;
+
+  @ApiPropertyOptional({
     description: 'Vinyls owned by the user',
     type: () => [Vinyl],
   })

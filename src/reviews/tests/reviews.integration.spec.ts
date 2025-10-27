@@ -1,7 +1,8 @@
 import { describe, it, before, after } from 'node:test';
 import * as assert from 'node:assert';
 import { Test } from '@nestjs/testing';
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import type { INestApplication } from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { DataSource } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
@@ -229,12 +230,12 @@ describe('ReviewsModule (Integration)', () => {
     assert.ok(res.body.message);
   });
 
-  it('should return 401 without authentication', async () => {
+  it('should return 200 without authentication', async () => {
     const res = await req('get', `/reviews/vinyl/${vinylId}`).query({
       page: 1,
       limit: 10,
     });
-    assert.strictEqual(res.status, 401);
+    assert.strictEqual(res.status, 200);
   });
 
   it('should return 401 with invalid token', async () => {
