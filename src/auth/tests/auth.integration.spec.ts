@@ -4,6 +4,7 @@ import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 import type { INestApplication } from '@nestjs/common';
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import * as request from 'supertest';
 import type { Repository } from 'typeorm';
 import { DataSource } from 'typeorm';
@@ -55,6 +56,7 @@ describe('AuthModule (Integration)', () => {
     userRepo = dataSource.getRepository(User);
 
     const jwtService = moduleFixture.get(JwtService);
+    const configService = moduleFixture.get(ConfigService);
     const testUser = await userRepo.save(
       userRepo.create({
         firstName: 'Existing',
@@ -65,7 +67,7 @@ describe('AuthModule (Integration)', () => {
       })
     );
 
-    const secret = process.env.JWT_SECRET || 'test_jwt_secret';
+    const secret = configService.get<string>('JWT_SECRET');
     accessToken = jwtService.sign(
       { sub: testUser.id, email: 'existing@test.com', role: 'User' },
       { secret }

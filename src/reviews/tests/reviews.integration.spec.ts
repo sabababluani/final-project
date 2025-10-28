@@ -3,6 +3,7 @@ import * as assert from 'node:assert';
 import { Test } from '@nestjs/testing';
 import type { INestApplication } from '@nestjs/common';
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import * as request from 'supertest';
 import { DataSource } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
@@ -45,7 +46,8 @@ describe('ReviewsModule (Integration)', () => {
 
     dataSource = module.get(DataSource);
     const jwtService = module.get(JwtService);
-    const secret = process.env.JWT_SECRET || 'test_jwt_secret';
+    const configService = module.get(ConfigService);
+    const secret = configService.get<string>('JWT_SECRET');
 
     const userRepo = dataSource.getRepository(User);
     const user = await userRepo.save(
@@ -145,7 +147,7 @@ describe('ReviewsModule (Integration)', () => {
 
   it('should return error for duplicate review', async () => {
     const res = await createReview(4, 'Duplicate review attempt here');
-    assert.strictEqual(res.status, 500);
+    assert.strictEqual(res.status, 400);
     assert.ok(res.body.message);
   });
 

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import * as Discogs from 'disconnect';
 import { VinylsService } from '../vinyls/vinyls.service';
 import { CreateVinylDto } from '../vinyls/dto/create-vinyl.dto';
@@ -13,13 +14,14 @@ export class DiscogsService {
   private readonly MAX_RETRIES = 3;
 
   constructor(
+    private readonly configService: ConfigService,
     private readonly vinylsService: VinylsService,
     private readonly systemLogsService: SystemLogsService
   ) {
     this.discogs = new Discogs.Client({
-      consumerKey: process.env.DISCOGS_CONSUMER_KEY,
-      consumerSecret: process.env.DISCOGS_CONSUMER_SECRET,
-      userToken: process.env.DISCOGS_USER_TOKEN,
+      consumerKey: this.configService.get<string>('DISCOGS_CONSUMER_KEY'),
+      consumerSecret: this.configService.get<string>('DISCOGS_CONSUMER_SECRET'),
+      userToken: this.configService.get<string>('DISCOGS_USER_TOKEN'),
     });
   }
 

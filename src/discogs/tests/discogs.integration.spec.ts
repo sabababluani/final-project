@@ -4,6 +4,7 @@ import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 import type { INestApplication } from '@nestjs/common';
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import * as request from 'supertest';
 import type { Repository } from 'typeorm';
 import { DataSource } from 'typeorm';
@@ -43,7 +44,8 @@ describe('DiscogsModule (Integration)', () => {
     userRepo = dataSource.getRepository(User);
 
     const jwtService = moduleFixture.get(JwtService);
-    const secret = process.env.JWT_SECRET || 'test_jwt_secret';
+    const configService = moduleFixture.get(ConfigService);
+    const secret = configService.get<string>('JWT_SECRET');
 
     const adminUser = await userRepo.save(
       userRepo.create({

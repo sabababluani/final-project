@@ -26,7 +26,7 @@ export class TelegramService {
       🎵 *New Vinyl Available!*
       *Name:* ${vinylName}
       *Price:* $${price}
-      *Link:* [Check Store](https://final-project-dhp1.onrender.com)
+      *Link:* [Check Store](https://final-project-dhp1.onrender.com/vinyls)
     `.trim();
 
     try {

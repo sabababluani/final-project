@@ -4,6 +4,7 @@ import type { TestingModule } from '@nestjs/testing';
 import { Test } from '@nestjs/testing';
 import type { INestApplication } from '@nestjs/common';
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import * as request from 'supertest';
 import { DataSource } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
@@ -34,6 +35,7 @@ describe('SystemLogsModule (Integration)', () => {
 
     dataSource = moduleFixture.get(DataSource);
     jwtService = moduleFixture.get(JwtService);
+    const configService = moduleFixture.get(ConfigService);
 
     const userRepository = dataSource.getRepository(User);
     const adminUser = userRepository.create({
@@ -56,7 +58,7 @@ describe('SystemLogsModule (Integration)', () => {
     const savedUser = await userRepository.save(regularUser);
     userId = savedUser.id;
 
-    const secret = process.env.JWT_SECRET || 'test_jwt_secret';
+    const secret = configService.get<string>('JWT_SECRET');
     adminToken = jwtService.sign(
       { sub: adminId, email: 'admin@test.com', role: 'Admin' },
       { secret }

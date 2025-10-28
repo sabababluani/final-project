@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { PaginationDto } from '../common/pagination.dto';
@@ -31,8 +36,9 @@ export class ReviewsService {
         user.id,
         vinylId
       );
+
       if (existingReview) {
-        throw new Error('User has already reviewed this vinyl');
+        throw new BadRequestException('User has already reviewed this vinyl');
       }
 
       await this.reviewsRepository.create(dto, user, vinyl, queryRunner);
@@ -47,7 +53,12 @@ export class ReviewsService {
       return { message: "Successfully created vinyl's review" };
     } catch (error) {
       await queryRunner.rollbackTransaction();
-      throw error;
+      if (
+        error instanceof NotFoundException ||
+        error instanceof BadRequestException
+      ) {
+        throw error;
+      }
     } finally {
       await queryRunner.release();
     }
