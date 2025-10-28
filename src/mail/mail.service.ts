@@ -85,20 +85,13 @@ export class MailService {
         `,
       };
 
-      console.log(
-        `[Mail] Attempting to send email to ${session.customer_email}...`
-      );
       const result = await this.mailTransporter.sendMail(mailOptions);
-      console.log(`[Mail] Email sent successfully:`, result.messageId);
 
       await this.systemLogs.createLog({
         level: LogLevel.INFO,
         message: `Success email sent to: ${session.customer_email}`,
       });
     } catch (error) {
-      console.error(`[Mail] Failed to send email:`, error);
-      console.error(`[Mail] Error details:`, error.message, error.stack);
-
       await this.systemLogs.createLog({
         level: LogLevel.ERROR,
         message: `Error sending success email to ${session.customer_email}: ${error.message}`,

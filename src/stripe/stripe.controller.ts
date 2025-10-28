@@ -38,30 +38,12 @@ export class StripeController {
     @Req() req: Request,
     @Headers('stripe-signature') signature: string
   ) {
-    console.log('[Controller] Webhook endpoint hit');
-
     if (!signature) {
-      console.error('[Controller] Missing stripe-signature header');
       throw new BadRequestException('Missing stripe-signature header');
     }
 
-    // Body must be a Buffer for signature verification
-    if (!Buffer.isBuffer(req.body)) {
-      console.error('[Controller] Body is not a Buffer!', {
-        type: typeof req.body,
-        url: req.originalUrl,
-        contentType: req.headers['content-type'],
-      });
-      throw new BadRequestException(
-        'Webhook body must be raw. Body parser misconfigured.'
-      );
-    }
-
-    console.log('[Controller] Body is valid Buffer, passing to service...');
     await this.stripeService.handleWebhookEvent(req.body, signature);
-    console.log(
-      '[Controller] Webhook processed successfully, returning response'
-    );
+
     return { received: true };
   }
 }
