@@ -1,93 +1,236 @@
-# Saba Babluani
+# 🎵 Vinyl Records Store
 
+A comprehensive NestJS-based REST API for a vinyl records marketplace, featuring authentication, payment processing, and integration with Discogs for vinyl catalog data.
 
+Showcase for LeverX's final project
 
-## Getting started
+## 📋 Table of Contents
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Database Setup](#database-setup)
+- [Running the Application](#running-the-application)
+- [Testing](#testing)
+- [API Documentation](#api-documentation)
+- [Project Structure](#project-structure)
+- [Available Scripts](#available-scripts)
+- [Development Guidelines](#development-guidelines)
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+## ✨ Features
 
-## Add your files
+- **Authentication & Authorization**
+  - JWT-based authentication
+  - Google OAuth 2.0 integration
+  - Role-based access control (RBAC)
+  - Token blacklisting for secure logout
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+- **Vinyl Management**
+  - CRUD operations for vinyl records
+  - Integration with Discogs API for vinyl catalog data
+  - Search and filtering capabilities
+  - Pagination support
 
+- **Order Management**
+  - Create and manage orders
+  - Order status tracking
+  - Order history
+
+- **Reviews System**
+  - User reviews and ratings for vinyl records
+  - Review moderation
+
+- **Payment Processing**
+  - Stripe integration for secure payments
+  - Webhook handling for payment events
+  - Order fulfillment
+
+- **Notifications**
+  - Email notifications via Nodemailer
+  - Telegram bot integration for alerts
+
+- **System Logging**
+  - Comprehensive audit logging
+  - Activity tracking
+
+## 🛠 Tech Stack
+
+- **Framework**: [NestJS](https://nestjs.com/) v11
+- **Language**: TypeScript
+- **Database**: PostgreSQL
+- **ORM**: TypeORM
+- **Authentication**: Passport.js (JWT & OAuth)
+- **Payment**: Stripe
+- **Email**: Nodemailer
+- **API Documentation**: Swagger/OpenAPI
+- **Testing**: Node.js Native Test Runner with C8 coverage
+- **Code Quality**: ESLint, Prettier, Husky
+
+## 📦 Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+- **Node.js** (v18 or higher)
+- **npm** (v9 or higher)
+- **PostgreSQL** (v14 or higher)
+- **Git**
+
+## 🚀 Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd saba-babluani
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Set up Husky (Git hooks)**
+   ```bash
+   npm run postinstall
+   ```
+
+## 🗄️ Database Setup
+
+1. **Create a PostgreSQL database**
+   ```bash
+   createdb vinyl_marketplace
+   ```
+
+2. **Run migrations**
+   ```bash
+   npm run migration:run
+   ```
+
+3. **Generate a new migration (if needed)**
+   ```bash
+   npm run migration:generate -- src/migrations/YourMigrationName
+   ```
+
+## 🎮 Running the Application
+
+### Development Mode
+```bash
+npm run start:dev
 ```
-cd existing_repo
-git remote add origin https://nodejs-course-2025-gitlab.codelx.dev/nodejs-courses-2025-georgia/saba-babluani.git
-git branch -M main
-git push -uf origin main
+The API will be available at `http://localhost:3000`
+
+### Production Mode
+```bash
+# Build the application
+npm run build
+
+# Start production server
+npm run start:prod
 ```
 
-## Integrate with your tools
+### Debug Mode
+```bash
+npm run start:debug
+```
 
-- [ ] [Set up project integrations](https://nodejs-course-2025-gitlab.codelx.dev/nodejs-courses-2025-georgia/saba-babluani/-/settings/integrations)
+## 🧪 Testing
 
-## Collaborate with your team
+```bash
+# Run unit tests
+npm run test
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+# Run unit tests in watch mode
+npm run test:watch
 
-## Test and Deploy
+# Run integration tests
+npm run test:integration
 
-Use the built-in continuous integration in GitLab.
+# Run e2e tests
+npm run test:e2e
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+# Generate coverage report
+npm run test:cov
 
-***
+# Run all tests with coverage
+npm run test:cov:all
+```
 
-# Editing this README
+Coverage reports will be generated in the `coverage` directory.
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+## 📚 API Documentation
 
-## Suggestions for a good README
+This project uses Swagger for comprehensive API documentation.
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+### Access Swagger UI
 
-## Name
-Choose a self-explaining name for your project.
+Once the application is running, visit:
+```
+http://localhost:3000/api/docs
+```
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+### Additional Documentation
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+- [Swagger Quick Start Guide](./SWAGGER_QUICK_START.md)
+- [Swagger Implementation Details](./SWAGGER_IMPLEMENTATION.md)
+- [Swagger Architecture](./SWAGGER_ARCHITECTURE.md)
+- [Complete Swagger Guide](./SWAGGER_GUIDE.md)
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+## 💻 Development Guidelines
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+### Code Style
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+This project uses ESLint and Prettier for code formatting. The configuration will automatically:
+- Format code on save (if configured in your IDE)
+- Run linting before commits (via Husky)
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+### Commit Guidelines
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+The project uses Husky to enforce code quality before commits. Ensure:
+- Code passes linting checks
+- Tests are passing
+- Code is properly formatted
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+### Creating New Modules
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+```bash
+nest generate module <module-name>
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+nest generate controller <module-name>
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+nest generate service <module-name>
+```
 
-## License
-For open source projects, say how it is licensed.
+### Best Practices
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+1. **DTOs**: Always create DTOs for request/response validation
+2. **Validation**: Use `class-validator` decorators for input validation
+3. **Documentation**: Add Swagger decorators to all endpoints
+4. **Testing**: Write unit tests for all services and controllers
+5. **Error Handling**: Use NestJS exception filters for consistent error responses
+6. **Security**: Never commit sensitive data or credentials
+
+## 🔒 Security Features
+
+- Password hashing with bcrypt
+- JWT token-based authentication
+- Token blacklisting for secure logout
+- Role-based access control (RBAC)
+- Input validation and sanitization
+- CORS configuration
+- Secure session management
+- Stripe webhook signature verification
+
+## 👥 Author
+
+**Saba Babluani**
+
+## 🙏 Acknowledgments
+
+- [NestJS](https://nestjs.com/) - The progressive Node.js framework
+- [Discogs API](https://www.discogs.com/developers/) - Vinyl records database
+- [Stripe](https://stripe.com/) - Payment processing
+- [TypeORM](https://typeorm.io/) - ORM for TypeScript
+
+
+**Happy Coding LeverX! 🎵✨**

@@ -65,16 +65,6 @@ All DTOs include example values to help API consumers understand expected format
 http://localhost:3001/api/docs
 ```
 
-### Production
-```
-https://api.vinylstore.com/api/docs
-```
-
-### Staging
-```
-https://staging-api.vinylstore.com/api/docs
-```
-
 ## Using the Swagger UI
 
 ### 1. **Authentication**

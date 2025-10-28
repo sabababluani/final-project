@@ -44,8 +44,6 @@ For issues or questions, please contact the development team.
     )
     .setLicense('MIT', 'https://opensource.org/licenses/MIT')
     .addServer('http://localhost:3001', 'Local Development Server')
-    .addServer('https://api.vinylstore.com', 'Production Server')
-    .addServer('https://staging-api.vinylstore.com', 'Staging Server')
     .addBearerAuth(
       {
         type: 'http',
