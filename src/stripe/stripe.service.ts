@@ -72,14 +72,20 @@ export class StripeService {
   }
 
   async handleWebhookEvent(rawBody: Buffer, signature: string) {
+    console.log(`[Webhook] Constructing webhook event from signature...`);
     try {
       const event = this.constructWebhookEvent(rawBody, signature);
+      console.log(
+        `[Webhook] Event constructed successfully. Type: ${event.type}`
+      );
 
       await this.processWebhookEvent(event);
+      console.log(`[Webhook] Event processed successfully`);
     } catch (error) {
+      console.error(`[Webhook] Fatal error processing webhook:`, error);
       await this.systemLogs.createLog({
         level: LogLevel.ERROR,
-        message: `Webhook processing error: ${error.message}`,
+        message: `Webhook processing error: ${error.message} - Stack: ${error.stack}`,
       });
       throw error;
     }
@@ -128,20 +134,30 @@ export class StripeService {
     session: Stripe.Checkout.Session
   ) {
     try {
+      console.log(
+        `[Webhook] Starting checkout session handling: ${session.id}`
+      );
+
       await this.systemLogs.createLog({
         level: LogLevel.INFO,
         message: `Checkout session completed ${session.id}`,
       });
 
+      console.log(`[Webhook] Retrieving session with line items...`);
       const sessionWithLineItems = await this.stripe.checkout.sessions.retrieve(
         session.id,
         { expand: ['line_items', 'line_items.data.price.product'] }
       );
+      console.log(
+        `[Webhook] Session retrieved, line items count: ${sessionWithLineItems.line_items?.data?.length || 0}`
+      );
 
       const lineItems = sessionWithLineItems.line_items?.data || [];
 
+      console.log(`[Webhook] Mapping line items to order items...`);
       const items = lineItems.map((item) => {
         const product = item.price?.product as Stripe.Product;
+        console.log(`[Webhook] Item: ${JSON.stringify(product?.metadata)}`);
         return {
           vinylId: Number(product.metadata?.vinylId),
           quantity: item.quantity ?? 1,
@@ -149,6 +165,10 @@ export class StripeService {
         };
       });
 
+      console.log(
+        `[Webhook] Creating order with items:`,
+        JSON.stringify(items, null, 2)
+      );
       await this.ordersService.createOrder({
         email: session.customer_email!,
         stripeSessionId: session.id,
@@ -156,19 +176,29 @@ export class StripeService {
         totalAmount: (session.amount_total ?? 0) / 100,
         items,
       });
+      console.log(`[Webhook] Order created successfully`);
 
       if (session.customer_email) {
+        console.log(
+          `[Webhook] Sending success email to ${session.customer_email}...`
+        );
         await this.sendSuccessEmail(session);
+        console.log(`[Webhook] Email sent successfully`);
       }
 
       await this.systemLogs.createLog({
         level: LogLevel.INFO,
         message: `Order created successfully for session ${session.id}`,
       });
+
+      console.log(`[Webhook] Checkout session handling completed successfully`);
     } catch (error) {
+      console.error(`[Webhook] Error in checkout session handler:`, error);
+      console.error(`[Webhook] Error stack:`, error.stack);
+
       await this.systemLogs.createLog({
         level: LogLevel.ERROR,
-        message: `Error handling checkout session ${session.id}: ${error.message}`,
+        message: `Error handling checkout session ${session.id}: ${error.message} - Stack: ${error.stack}`,
       });
       throw error;
     }
