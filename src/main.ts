@@ -23,7 +23,10 @@ async function bootstrap() {
   );
 
   app.use((req, res, next) => {
-    if (req.originalUrl.includes('/stripe/webhook') || req.path.includes('/stripe/webhook')) {
+    if (
+      req.originalUrl.includes('/stripe/webhook') ||
+      req.path.includes('/stripe/webhook')
+    ) {
       console.log('Stripe webhook detected - using raw body parser');
       raw({ type: 'application/json' })(req, res, next);
     } else {

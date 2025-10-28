@@ -49,15 +49,17 @@ export class StripeController {
     console.log('  - Body type:', typeof req.body);
     console.log('  - Is Buffer:', Buffer.isBuffer(req.body));
     console.log('  - Content-Type:', req.headers['content-type']);
-    
+
     // Body must be a Buffer for signature verification
     if (!Buffer.isBuffer(req.body)) {
-      console.error('Body is not a Buffer! Body parser not configured correctly.');
+      console.error(
+        'Body is not a Buffer! Body parser not configured correctly.'
+      );
       throw new BadRequestException(
         'Webhook body must be raw. Body parser misconfigured.'
       );
     }
-    
+
     await this.stripeService.handleWebhookEvent(req.body, signature);
     return { received: true };
   }
