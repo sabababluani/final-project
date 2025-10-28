@@ -42,7 +42,8 @@ export class StripeController {
       throw new BadRequestException('Missing stripe-signature header');
     }
 
-    await this.stripeService.handleWebhookEvent(req.body, signature);
+    const rawBody = req.body as Buffer;
+    await this.stripeService.handleWebhookEvent(rawBody, signature);
     return { received: true };
   }
 }

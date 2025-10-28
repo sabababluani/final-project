@@ -20,7 +20,13 @@ async function bootstrap() {
     })
   );
 
-  app.use('/stripe/webhook', bodyParser.raw({ type: 'application/json' }));
+  app.use((req, res, next) => {
+    if (req.originalUrl === '/stripe/webhook') {
+      bodyParser.raw({ type: 'application/json' })(req, res, next);
+    } else {
+      bodyParser.json()(req, res, next);
+    }
+  });
 
   app.use(
     session({
