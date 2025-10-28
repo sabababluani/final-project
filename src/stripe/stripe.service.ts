@@ -72,9 +72,17 @@ export class StripeService {
   }
 
   async handleWebhookEvent(rawBody: Buffer, signature: string) {
-    const event = this.constructWebhookEvent(rawBody, signature);
+    try {
+      const event = this.constructWebhookEvent(rawBody, signature);
 
-    await this.processWebhookEvent(event);
+      await this.processWebhookEvent(event);
+    } catch (error) {
+      await this.systemLogs.createLog({
+        level: LogLevel.ERROR,
+        message: `Webhook processing error: ${error.message}`,
+      });
+      throw error;
+    }
   }
 
   private async loadVinylsWithQuantities(items: CreateOrderItemDto[]) {
@@ -119,37 +127,50 @@ export class StripeService {
   private async handleCheckoutSessionCompleted(
     session: Stripe.Checkout.Session
   ) {
-    await this.systemLogs.createLog({
-      level: LogLevel.INFO,
-      message: `Checkout session completed ${session.id}`,
-    });
+    try {
+      await this.systemLogs.createLog({
+        level: LogLevel.INFO,
+        message: `Checkout session completed ${session.id}`,
+      });
 
-    const sessionWithLineItems = await this.stripe.checkout.sessions.retrieve(
-      session.id,
-      { expand: ['line_items', 'line_items.data.price.product'] }
-    );
+      const sessionWithLineItems = await this.stripe.checkout.sessions.retrieve(
+        session.id,
+        { expand: ['line_items', 'line_items.data.price.product'] }
+      );
 
-    const lineItems = sessionWithLineItems.line_items?.data || [];
+      const lineItems = sessionWithLineItems.line_items?.data || [];
 
-    const items = lineItems.map((item) => {
-      const product = item.price?.product as Stripe.Product;
-      return {
-        vinylId: Number(product.metadata?.vinylId),
-        quantity: item.quantity ?? 1,
-        price: (item.price?.unit_amount ?? 0) / 100,
-      };
-    });
+      const items = lineItems.map((item) => {
+        const product = item.price?.product as Stripe.Product;
+        return {
+          vinylId: Number(product.metadata?.vinylId),
+          quantity: item.quantity ?? 1,
+          price: (item.price?.unit_amount ?? 0) / 100,
+        };
+      });
 
-    await this.ordersService.createOrder({
-      email: session.customer_email!,
-      stripeSessionId: session.id,
-      stripePaymentIntentId: session.payment_intent as string,
-      totalAmount: (session.amount_total ?? 0) / 100,
-      items,
-    });
+      await this.ordersService.createOrder({
+        email: session.customer_email!,
+        stripeSessionId: session.id,
+        stripePaymentIntentId: session.payment_intent as string,
+        totalAmount: (session.amount_total ?? 0) / 100,
+        items,
+      });
 
-    if (session.customer_email) {
-      await this.sendSuccessEmail(session);
+      if (session.customer_email) {
+        await this.sendSuccessEmail(session);
+      }
+
+      await this.systemLogs.createLog({
+        level: LogLevel.INFO,
+        message: `Order created successfully for session ${session.id}`,
+      });
+    } catch (error) {
+      await this.systemLogs.createLog({
+        level: LogLevel.ERROR,
+        message: `Error handling checkout session ${session.id}: ${error.message}`,
+      });
+      throw error;
     }
   }
 

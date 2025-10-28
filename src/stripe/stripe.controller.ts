@@ -43,6 +43,11 @@ export class StripeController {
     }
 
     const rawBody = req.body as Buffer;
+    
+    // Log the raw body to debug
+    console.log('Webhook received, body type:', typeof rawBody);
+    console.log('Webhook received, is Buffer:', Buffer.isBuffer(rawBody));
+    
     await this.stripeService.handleWebhookEvent(rawBody, signature);
     return { received: true };
   }

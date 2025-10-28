@@ -3,12 +3,14 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import * as session from 'express-session';
 import * as passport from 'passport';
-import * as bodyParser from 'body-parser';
+import { json, raw } from 'express';
 import { setupSwagger } from './config/swagger.config';
 import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    rawBody: true,
+  });
 
   const configService = app.get(ConfigService);
 
@@ -20,13 +22,8 @@ async function bootstrap() {
     })
   );
 
-  app.use((req, res, next) => {
-    if (req.originalUrl === '/stripe/webhook') {
-      bodyParser.raw({ type: 'application/json' })(req, res, next);
-    } else {
-      bodyParser.json()(req, res, next);
-    }
-  });
+  app.use('/stripe/webhook', raw({ type: 'application/json' }));
+  app.use(json());
 
   app.use(
     session({
