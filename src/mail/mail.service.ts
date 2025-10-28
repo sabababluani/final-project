@@ -104,7 +104,6 @@ export class MailService {
         message: `Error sending success email to ${session.customer_email}: ${error.message}`,
       });
 
-      // Re-throw the error so it can be handled by the caller
       throw error;
     }
   }
