@@ -63,8 +63,8 @@ export class StripeService {
 
     const session = await this.createCheckoutSession({
       items: lineItems,
-      successUrl: 'https://example.com/success',
-      cancelUrl: 'https://example.com/cancel',
+      successUrl: 'https://success-fail-page-maker.lovable.app/success',
+      cancelUrl: 'https://success-fail-page-maker.lovable.app/fail',
       customerEmail: user.email,
     });
 
