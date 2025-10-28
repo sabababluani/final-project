@@ -178,26 +178,12 @@ export class StripeService {
       });
       console.log(`[Webhook] Order created successfully`);
 
-      // Send email asynchronously without blocking the webhook response
       if (session.customer_email) {
         console.log(
-          `[Webhook] Queueing success email to ${session.customer_email}...`
+          `[Webhook] Sending success email to ${session.customer_email}...`
         );
-        // Fire and forget - don't await this to prevent webhook timeout
-        this.sendSuccessEmail(session)
-          .then(() => {
-            console.log(
-              `[Webhook] Email sent successfully to ${session.customer_email}`
-            );
-          })
-          .catch((error) => {
-            console.error(`[Webhook] Error sending email:`, error);
-            // Log but don't fail the webhook
-            this.systemLogs.createLog({
-              level: LogLevel.ERROR,
-              message: `Failed to send success email for session ${session.id}: ${error.message}`,
-            });
-          });
+        await this.sendSuccessEmail(session);
+        console.log(`[Webhook] Email sent successfully`);
       }
 
       await this.systemLogs.createLog({

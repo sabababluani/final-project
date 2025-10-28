@@ -23,7 +23,6 @@ async function bootstrap() {
   );
 
   app.use((req, res, next) => {
-    // Stripe webhooks require raw body for signature verification
     if (
       req.originalUrl.includes('/stripe/webhook') ||
       req.path.includes('/stripe/webhook')
