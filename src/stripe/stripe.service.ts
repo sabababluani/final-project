@@ -164,7 +164,6 @@ export class StripeService {
         level: LogLevel.INFO,
         message: `Order created successfully for session ${session.id}`,
       });
-
     } catch (error) {
       await this.systemLogs.createLog({
         level: LogLevel.ERROR,
